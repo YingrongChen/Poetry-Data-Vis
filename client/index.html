@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Feedback from M1: No reflection on poetic form, no title -->
+    <title>Our Feelings & Future</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1 class="title">
+        Our Feelings & Future – Teenage Girls' Wellbeing and Outlook
+      </h1>
+    </header>
+    <main class="wrapper">
+      <div class="left-column">
+        <div class="left-column-content">
+          <!-- Add filler verse divs so that the content is centered vertically even at the start -->
+          <div class="filler-verse"></div>
+
+          <ul class="verse" id="verse1">
+            <li class="line" id="line1">I am a woman, but I hate being one.</li>
+            <li class="line" id="line2">What is "misogyny," you'll find?</li>
+            <li class="line" id="line3">
+              In men, it's the disdain for feminine traits.
+            </li>
+            <li class="line" id="line4">
+              In women, it's an internal battle we must face.
+            </li>
+          </ul>
+
+          <ul class="verse" id="verse2">
+            <li class="line" id="line1">Childhood, adolescence, adulthood,</li>
+            <li class="line" id="line2">
+              as I grew up, I felt less satisfied with myself.
+            </li>
+            <li class="line" id="line3">In my “prettiest” age,</li>
+            <li class="line" id="line4">ages depreciated me.</li>
+          </ul>
+
+          <ul class="verse" id="verse3">
+            <li class="line" id="line1">"Find a boyfriend," they say, </li>
+            <li class="line" id="line2">"He'll take care of you," the cliché,</li>
+            <li class="line" id="line3">Who is doing the cleaning each day?</li>
+            <li class="line" id="line4">Back home, it's sister, mother, grandma.</li>
+          </ul>
+          <ul class="verse" id="verse4">
+            <li class="line" id="line1">
+              By the time I am 30, what I will have achieved?
+            </li>
+            <input
+              type="checkbox"
+              id="partner"
+              name="outlook"
+              value="partner"
+            />
+            <label for="partner"> I will have a partner</label
+            ><br />
+            <input type="checkbox" id="job" name="outlook" value="job" />
+            <label for="job"> I will have a worthwhile job</label
+            ><br />
+            <input type="checkbox" id="home" name="outlook" value="home" />
+            <label for="home"> I will have a nice home</label
+            ><br />
+            <input
+              type="checkbox"
+              id="children"
+              name="outlook"
+              value="children"
+            />
+            <label for="children"> I will have a children</label
+            ><br />
+            <input type="checkbox" id="money" name="outlook" value="money" />
+            <label for="money"> I will earn a lot of money</label
+            ><br />
+            <input type="checkbox" id="famous" name="outlook" value="famous" />
+            <label for="famous"> I will get famous.</label
+            ><br />
+            <input type="checkbox" id="none" name="outlook" value="none" />
+            <label for="none"> I will none of this.</label
+            ><br />
+            <li class="line" id="line2">
+              Yet without a man, it was always "incomplete".
+            </li>
+          </ul>
+          <!-- Add filler verse divs so that the content is centered vertically even at the start -->
+          <div class="filler-verse"></div>
+        </div>
+      </div>
+      <div class="right-column">
+        <svg id="svg"></svg>
+      </div>
+    </main>
+    <footer>
+      <button class="arrow-button" id="backward-button">◄</button>
+      <button class="arrow-button" id="forward-button">►</button>
+    </footer>
+    <script src="main.js"></script>
+  </body>
+</html>
