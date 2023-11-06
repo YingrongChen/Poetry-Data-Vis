@@ -416,7 +416,7 @@ function colorOutlook() {
 }
 
 function drawOutlookPie(input){
-  const subwidth = 400;
+  const subwidth = 300;
 
   document.getElementById("svg2").setAttribute("width", subwidth);
 
@@ -471,7 +471,7 @@ function drawOutlookPie(input){
 
     svg2
       .append("text")
-      .attr("x",-100)
+      .attr("x",-subwidth/2+25)
       .attr("y",0)
       .text("People saying Yes to " + input + " by gender");
       });
