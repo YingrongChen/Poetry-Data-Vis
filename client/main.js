@@ -332,7 +332,6 @@ function drawOutlook() {
       .append("rect")
       .attr("class", "bar")
       .attr("id", function (d) {
-        // console.log(d.key);
         return d.key;
       })
       .attr("x", function (d) {
@@ -399,11 +398,83 @@ function colorOutlook() {
     checkboxes.forEach((checkbox) => {
       values.push(checkbox.value);
     });
-    svg.selectAll(".bar-group").attr("fill", function (d) {
-      return values.includes(d.outlook) ? "red" : "black";
-    });
+    svg.selectAll(".bar-group")
+    .filter(function(d) { return values.includes(d.outlook) })
+    .attr("fill", "red");
+    if (values.includes("partner")) {
+      drawOutlookPie("partner")
+    }else if (values.includes("job")) {
+      drawOutlookPie("job")
+    }else{
+      document.getElementById("svg2").setAttribute("width", 0);
+    }
+    svg.selectAll(".bar-group")
+    .filter(function(d) { return !values.includes(d.outlook) })
+    .attr("fill", "black");
     svg.selectAll(".bar#No").attr("fill", "black");
   });
+}
+
+function drawOutlookPie(input){
+  const subwidth = 400;
+
+  document.getElementById("svg2").setAttribute("width", subwidth);
+
+  d3.json("../data/" + input + ".json", function (data) {
+
+    const margin = { top: 30, right: 30, bottom: 30, left: 30 };
+    const chartWidth = subwidth - margin.left - margin.right;
+    const chartHeight = subwidth - margin.top - margin.bottom;
+    
+    const svg2 = d3
+    .select("#svg2")
+    .append("svg")
+    .attr("width", subwidth)
+    .attr("height", subwidth)
+    .append("g")
+    .attr("transform", "translate(" + subwidth/2 + ", " + subwidth/2 + ")");
+
+    let radius = Math.min(chartWidth, chartHeight) / 2;
+
+    var pie = d3.pie().value((d) => d.count);
+    var path = d3.arc().innerRadius(0).outerRadius(radius);
+
+    const pies = svg2
+      .selectAll(".arc")
+      .data(pie(data))
+      .enter()
+      .append("g")
+      .attr("class", "arc");
+    pies
+      .append("path")
+      .attr("class", "path")
+      .attr("d", path)
+      .attr("fill", "MediumSeaGreen");
+
+    svg2
+      .selectAll(".path")
+      .attr("fill", function (d, i) {
+        return color(i);
+      })
+      .on("mouseover", function (d, i) {
+        d3.select(this).transition().duration("50").attr("opacity", ".85");
+        div.transition().duration(50).style("opacity", 1);
+        div
+          .html(d.data.sex + ": " + d.data.count)
+          .style("left", d3.event.pageX + 10 + "px")
+          .style("top", d3.event.pageY - 15 + "px");
+      })
+      .on("mouseout", function (d, i) {
+        d3.select(this).transition().duration("50").attr("opacity", "1");
+        div.transition().duration("50").style("opacity", 0);
+      });
+
+    svg2
+      .append("text")
+      .attr("x",-100)
+      .attr("y",0)
+      .text("People saying Yes to " + input + " by gender");
+      });
 }
 
 function redrawSatisfication() {

@@ -82,8 +82,7 @@ footer {
   color: BurlyWood;
 }
 
-svg {
-  background-color: DarkSeaGreen;
+#svg {
   width: 700px;
   height: 500px;
 }

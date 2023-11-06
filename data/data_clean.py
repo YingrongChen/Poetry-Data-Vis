@@ -55,35 +55,29 @@ age17 = pd.merge(interview_age17, hhgrid_age17, on='MCSID', how='left')
 # interview_age17 = pd.read_spss("mcs7_cm_interview.sav")
 # sex=interview_age14[['FCCSEX00']]
 futureExpect = age17[['GHPSEX00', 'GCASPR0A', 'GCASPR0B', 'GCASPR0C', 'GCASPR0D', 'GCASPR0E', 'GCASPR0F', 'GCASPR0G', 'GCASPR0H', 'GCASPR0I']]
-futureExpect = futureExpect[futureExpect['GHPSEX00'] == "Female"]
+# futureExpect = futureExpect[futureExpect['GHPSEX00'] == "Female"]
+# print(futureExpect)
 columnNames=["Sex", "Home", "Car", "Money", "Job", "Children", "Partner", "Famous", "Personal Achievement", "None"]
 futureExpect.columns = columnNames
-df = futureExpect['Home'].value_counts().rename_axis('unique_values').to_frame('Home')
-percendf = pd.DataFrame()
-for each in columnNames:
-    df[each] = futureExpect[each].value_counts().rename_axis('unique_values').to_frame(each)
-    percendf[each] = df[each] / df[each].sum()
-print(percendf)
-percendf = percendf.T 
-# sort by column 'Yes'
-percendf.sort_values('Yes', ascending=False, inplace=True)
-# save data to json
-percendf.to_csv('futureExpectbysex.csv')
+# df = futureExpect['Home'].value_counts().rename_axis('unique_values').to_frame('Home')
+# percendf = pd.DataFrame()
+# for each in columnNames:
+#     df[each] = futureExpect[each].value_counts().rename_axis('unique_values').to_frame(each)
+#     percendf[each] = df[each] / df[each].sum()
+# # print(percendf)
+# print(df.T)
+# percendf = percendf.T 
+# # sort by column 'Yes'
+# percendf.sort_values('Yes', ascending=False, inplace=True)
+# # save data to json
+# percendf.to_csv('futureExpectbysex.csv')
 
-# ECQ10A00
-# ECQ10B00
-# ECQ10C00
-# ECQ10D00
-# ECQ10E00
-# ECQ10F00
+# futureExpect = age17[['GHPSEX00', 'GCASPR0A', 'GCASPR0B', 'GCASPR0C', 'GCASPR0D', 'GCASPR0E', 'GCASPR0F', 'GCASPR0G', 'GCASPR0H', 'GCASPR0I']]
+# partner = futureExpect[['Sex', 'Partner']]
+# group by sex
+partner = futureExpect.groupby('Sex')['Partner'].value_counts()
+children = futureExpect.groupby('Sex')['Children'].value_counts()
+Achievement = futureExpect.groupby('Sex')['Personal Achievement'].value_counts()
+Job = futureExpect.groupby('Sex')['Job'].value_counts()
 
-# FCSCWK00
-# FCWYLK00
-# FCFMLY00
-# FCFRNS00
-# FCSCHL00
-# FCLIFE00
-
-# Create a new dataframe with the interview_age11_satisfied, interview_age14_satisfied, interview_age17_satisfied
-# satisfied = pd.DataFrame({'interview_age11_satisfied': interview_age11_satisfied, 'interview_age14_satisfied': interview_age14_satisfied, 'interview_age17_satisfied': interview_age17_satisfied})
-# print(satisfied.describe())
+print(Job)
