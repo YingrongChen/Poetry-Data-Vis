@@ -8,11 +8,12 @@ import os
 
 # hhgrid_age11 = pd.read_spss("mcs5_hhgrid.sav")
 # hhgrid_age14 = pd.read_spss("mcs6_hhgrid.sav")
-# hhgrid_age17 = pd.read_spss("mcs7_hhgrid.sav")
+hhgrid_age17 = pd.read_spss("mcs7_hhgrid.sav")
+interview_age17 = pd.read_spss("mcs7_cm_interview.sav")
 
 # age11 = pd.merge(interview_age11, hhgrid_age11, on='MCSID', how='left')
 # age14 = pd.merge(interview_age14, hhgrid_age14, on='MCSID', how='left')
-# age17 = pd.merge(interview_age17, hhgrid_age17, on='MCSID', how='left')
+age17 = pd.merge(interview_age17, hhgrid_age17, on='MCSID', how='left')
 
 # # Create a list of the column names
 # interview_age11_satisfied = age11[['ECQ11A00', 'EPSEX0000']]
@@ -51,10 +52,11 @@ import os
 
 # save data to csv
 # df.to_json('satisfaction.json', orient='table')
-interview_age17 = pd.read_spss("mcs7_cm_interview.sav")
+# interview_age17 = pd.read_spss("mcs7_cm_interview.sav")
 # sex=interview_age14[['FCCSEX00']]
-futureExpect = interview_age17[['GCASPR0A', 'GCASPR0B', 'GCASPR0C', 'GCASPR0D', 'GCASPR0E', 'GCASPR0F', 'GCASPR0G', 'GCASPR0H', 'GCASPR0I']]
-columnNames=["Home", "Car", "Money", "Job", "Children", "Partner", "Famous", "Personal Achievement", "None"]
+futureExpect = age17[['GHPSEX00', 'GCASPR0A', 'GCASPR0B', 'GCASPR0C', 'GCASPR0D', 'GCASPR0E', 'GCASPR0F', 'GCASPR0G', 'GCASPR0H', 'GCASPR0I']]
+futureExpect = futureExpect[futureExpect['GHPSEX00'] == "Female"]
+columnNames=["Sex", "Home", "Car", "Money", "Job", "Children", "Partner", "Famous", "Personal Achievement", "None"]
 futureExpect.columns = columnNames
 df = futureExpect['Home'].value_counts().rename_axis('unique_values').to_frame('Home')
 percendf = pd.DataFrame()
@@ -66,7 +68,7 @@ percendf = percendf.T
 # sort by column 'Yes'
 percendf.sort_values('Yes', ascending=False, inplace=True)
 # save data to json
-percendf.to_csv('futureExpect.csv')
+percendf.to_csv('futureExpectbysex.csv')
 
 # ECQ10A00
 # ECQ10B00

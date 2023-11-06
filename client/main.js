@@ -125,6 +125,12 @@ let svg = d3
 // color palette = one color per subgroup
 let color = d3.scaleOrdinal().range(["LightCoral", "LightBlue"]);
 
+let div = d3
+  .select("body")
+  .append("div")
+  .attr("class", "tooltip-donut")
+  .style("opacity", 0);
+
 function drawSatisfication() {
   // Parse the Data
   d3.csv("../data/final_satisfaction_4point.csv", function (data) {
@@ -176,6 +182,18 @@ function drawSatisfication() {
       })
       .attr("fill", function (d) {
         return color(d.key);
+      })
+      .on("mouseover", function (d, i) {
+        d3.select(this).transition().duration("50").attr("opacity", ".85");
+        div.transition().duration(50).style("opacity", 1);
+        div
+          .html(d.key + ": " + d.value)
+          .style("left", d3.event.pageX + 10 + "px")
+          .style("top", d3.event.pageY - 15 + "px");
+      })
+      .on("mouseout", function (d, i) {
+        d3.select(this).transition().duration("50").attr("opacity", "1");
+        div.transition().duration("50").style("opacity", 0);
       });
     svg
       .append("text")
@@ -201,7 +219,6 @@ function drawSatisfication() {
     svg
       .append("text")
       .attr("id", "caption")
-      .attr("text-anchor", "end")
       .attr("x", width / 2)
       .attr("y", height + 90)
       .text("Source: Millennium Cohort Study (MCS)");
@@ -211,7 +228,7 @@ function drawSatisfication() {
 function drawHousehold() {
   svg.selectAll("*").remove();
   d3.json("../data/household_china.json", function (data) {
-    console.log(data);
+    // console.log(data);
     const margin = { top: 30, right: 30, bottom: 50, left: 50 };
     chartWidth = width - margin.left - margin.right;
     chartHeight = height - margin.top - margin.bottom;
@@ -237,14 +254,22 @@ function drawHousehold() {
       .attr("d", path)
       .attr("fill", "MediumSeaGreen");
 
-    svg.selectAll(".path").transition().duration(1000);
     svg
       .selectAll(".path")
-      .transition()
-      .duration(1000)
-      // update it's fill colour
       .attr("fill", function (d, i) {
         return color(i);
+      })
+      .on("mouseover", function (d, i) {
+        d3.select(this).transition().duration("50").attr("opacity", ".85");
+        div.transition().duration(50).style("opacity", 1);
+        div
+          .html(d.data.sex + ": " + d.data.count + " minutes per day")
+          .style("left", d3.event.pageX + 10 + "px")
+          .style("top", d3.event.pageY - 15 + "px");
+      })
+      .on("mouseout", function (d, i) {
+        d3.select(this).transition().duration("50").attr("opacity", "1");
+        div.transition().duration("50").style("opacity", 0);
       });
 
     svg
@@ -257,10 +282,11 @@ function drawHousehold() {
     svg
       .append("text")
       .attr("id", "caption")
-      .attr("text-anchor", "end")
-      .attr("x", width / 2+150)
+      .attr("x", width / 2)
       .attr("y", height + 90)
-      .text("Source: Organisation for Economic Co-operation and Development (OECD)");
+      .text(
+        "Source: Organisation for Economic Co-operation and Development (OECD)"
+      );
   });
 }
 
@@ -273,6 +299,7 @@ function drawOutlook() {
         return d.outlook;
       })
       .keys();
+    // console.log(groups);
     var x = d3.scaleBand().domain(groups).range([0, width]).padding([0.2]);
     svg
       .append("g")
@@ -291,19 +318,25 @@ function drawOutlook() {
       .data(data)
       .enter()
       .append("g")
+      .attr("class", "bar-group")
       .attr("transform", function (d) {
         return "translate(" + x(d.outlook) + ",0)";
       })
       .selectAll("rect")
       .data(function (d) {
         return subgroups.map(function (key) {
-          return { key: key, value: d[key] };
+          return { key: key, value: d[key] }; //key (set to the current key from subgroups), value (set to the corresponding value from the d object using the key as a property name).
         });
       })
       .enter()
       .append("rect")
+      .attr("class", "bar")
+      .attr("id", function (d) {
+        // console.log(d.key);
+        return d.key;
+      })
       .attr("x", function (d) {
-        return xSubgroup(d.key);
+        return xSubgroup(d.key); //inside each group, you append the rects using the second scale.
       })
       .attr("y", function (d) {
         return y(d.value);
@@ -312,36 +345,49 @@ function drawOutlook() {
       .attr("height", function (d) {
         return height - y(d.value);
       })
-      .attr("fill", "black");
+      .classed("outlook", function (d) {
+        return d.key;
+      })
+      .on("mouseover", function (d, i) {
+        d3.select(this).transition().duration("50").attr("opacity", ".85");
+        div.transition().duration(50).style("opacity", 1);
+        div
+          .html(d.key + ": " + d.value)
+          .style("left", d3.event.pageX + 10 + "px")
+          .style("top", d3.event.pageY - 15 + "px");
+      })
+      .on("mouseout", function (d, i) {
+        d3.select(this).transition().duration("50").attr("opacity", "1");
+        div.transition().duration("50").style("opacity", 0);
+      });
 
     svg
-    .append("text")
-    .attr("id", "chart-title")
-    .attr("x", 70)
-    .attr("y", -10)
-    .text("Outlooks of Future at Age 17");
+      .append("text")
+      .attr("id", "chart-title")
+      .attr("x", 70)
+      .attr("y", -10)
+      .text("Outlooks of Future at Age 17");
 
-  svg
-    .append("text")
-    .attr("id", "axis-label")
-    .attr("text-anchor", "end")
-    .attr("x", width / 2)
-    .attr("y", height + 30)
-    .text("Achievement");
-  svg
-    .append("text")
-    .attr("id", "axis-label")
-    .attr("text-anchor", "end")
-    .attr("y", -40)
-    .attr("transform", "rotate(-90)")
-    .text("%Participants answering Yes or No");
-  svg
-    .append("text")
-    .attr("id", "caption")
-    .attr("text-anchor", "end")
-    .attr("x", width / 2)
-    .attr("y", height + 90)
-    .text("Source: Millennium Cohort Study (MCS)");
+    svg
+      .append("text")
+      .attr("id", "axis-label")
+      .attr("text-anchor", "end")
+      .attr("x", width / 2)
+      .attr("y", height + 30)
+      .text("Achievement");
+    svg
+      .append("text")
+      .attr("id", "axis-label")
+      .attr("text-anchor", "end")
+      .attr("y", -40)
+      .attr("transform", "rotate(-90)")
+      .text("%Participants answering Yes or No");
+    svg
+      .append("text")
+      .attr("id", "caption")
+      .attr("x", width / 2)
+      .attr("y", height + 90)
+      .text("Source: Millennium Cohort Study (MCS)");
   });
   colorOutlook();
 }
@@ -349,9 +395,14 @@ function drawOutlook() {
 function colorOutlook() {
   document.addEventListener("click", (event) => {
     let checkboxes = document.querySelectorAll('input[name="outlook"]:checked');
+    let values = [];
     checkboxes.forEach((checkbox) => {
-      console.log(checkbox.value);
+      values.push(checkbox.value);
     });
+    svg.selectAll(".bar-group").attr("fill", function (d) {
+      return values.includes(d.outlook) ? "red" : "black";
+    });
+    svg.selectAll(".bar#No").attr("fill", "black");
   });
 }
 
